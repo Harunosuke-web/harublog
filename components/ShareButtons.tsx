@@ -9,6 +9,7 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ title, url }: ShareButtonsProps) {
   const [showToast, setShowToast] = useState(false);
+  const [copied, setCopied] = useState(false);
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
 
@@ -32,6 +33,8 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
       showToastNotification();
     } catch {
       // フォールバック: 古いブラウザ向け
@@ -41,6 +44,8 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
       showToastNotification();
     }
   };
@@ -54,7 +59,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
         <div className="flex gap-3">
           <button
             onClick={() => handleShare("x")}
-            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-black dark:hover:bg-white text-gray-600 dark:text-gray-400 hover:text-white dark:hover:text-black border border-gray-200 dark:border-gray-600 hover:border-black dark:hover:border-white rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg"
+            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-black dark:hover:bg-white text-gray-600 dark:text-gray-400 hover:text-white dark:hover:text-black border border-gray-200 dark:border-gray-600 hover:border-black dark:hover:border-white rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
             aria-label="Xでシェア"
           >
             <svg
@@ -72,7 +77,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
 
           <button
             onClick={() => handleShare("facebook")}
-            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-blue-600 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-blue-600 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg"
+            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-blue-600 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-blue-600 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
             aria-label="Facebookでシェア"
           >
             <svg
@@ -110,7 +115,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
 
           <button
             onClick={() => handleShare("hatena")}
-            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-blue-800 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-blue-800 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg"
+            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-blue-800 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-blue-800 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
             aria-label="はてなブックマークでシェア"
           >
             <svg
@@ -128,7 +133,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
 
           <button
             onClick={() => handleShare("pinterest")}
-            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-red-600 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-red-600 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg"
+            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-red-600 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-red-600 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
             aria-label="Pinterestでシェア"
           >
             <svg
@@ -146,45 +151,43 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
 
           <button
             onClick={handleCopyLink}
-            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-gray-600 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg"
+            className="group relative flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-600 hover:border-gray-600 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
             aria-label="リンクをコピー"
           >
-            <svg
-              className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-              />
-            </svg>
+            {copied ? (
+              <svg
+                className="w-5 h-5 text-green-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+            )}
             {/* Tooltip */}
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-              URLをコピー
+              {copied ? "コピーしました" : "URLをコピー"}
             </div>
           </button>
         </div>
       </div>
-
-      {/* Toast notification */}
-      {showToast && (
-        <div className="fixed bottom-4 right-4 z-50 animate-in slide-in-from-bottom-2 duration-300">
-          <div className="flex items-center gap-2 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-sm font-medium">URLをコピーしました</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

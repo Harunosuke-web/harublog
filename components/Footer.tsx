@@ -17,7 +17,7 @@ export default function Footer() {
               </div>
               <div className="flex space-x-6">
                 <a
-                  href="https://x.com/harunosuke"
+                  href="https://x.com/harunosuke_web"
                   className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -32,7 +32,7 @@ export default function Footer() {
                   </svg>
                 </a>
                 <a
-                  href="https://github.com/harunosuke"
+                  href="https://github.com/harunosuke-web"
                   className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
                   target="_blank"
                   rel="noopener noreferrer"

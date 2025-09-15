@@ -24,7 +24,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
             <li>
               <Link
                 href="/"
-                className="hover:text-gray-700 dark:hover:text-gray-300"
+                className="hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
               >
                 Home
               </Link>
@@ -33,7 +33,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
             <li>
               <Link
                 href="/blog"
-                className="hover:text-gray-700 dark:hover:text-gray-300"
+                className="hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
               >
                 Blog
               </Link>
@@ -98,7 +98,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
         <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
           <Link
             href="/blog"
-            className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
+            className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer"
           >
             ← ブログ一覧に戻る
           </Link>

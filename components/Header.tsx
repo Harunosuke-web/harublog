@@ -23,7 +23,7 @@ export default function Header() {
       <nav className="mx-auto max-w-6xl px-6 lg:px-8" aria-label="Global">
         <div className="flex h-14 items-center justify-between">
           <div className="flex lg:flex-1">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5 cursor-pointer">
               <span className="text-lg font-light text-gray-800 dark:text-gray-100 tracking-tight">
                 harunosuke web
               </span>
@@ -33,7 +33,7 @@ export default function Header() {
           <div className="flex lg:hidden">
             <button
               type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300 cursor-pointer"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <span className="sr-only">メニューを開く</span>
@@ -56,13 +56,13 @@ export default function Header() {
           <div className="hidden lg:flex lg:gap-x-8">
             <Link
               href="/blog"
-              className="text-sm font-normal leading-6 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-sm font-normal leading-6 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
             >
               Blog
             </Link>
             <Link
               href="/about"
-              className="text-sm font-normal leading-6 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-sm font-normal leading-6 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
             >
               About
             </Link>
@@ -71,7 +71,7 @@ export default function Header() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-4">
             <button
               onClick={toggleTheme}
-              className="rounded-md p-2 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+              className="rounded-md p-2 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 transition-colors cursor-pointer"
               aria-label="テーマを切り替え"
               disabled={!mounted}
             >
@@ -103,14 +103,14 @@ export default function Header() {
             <div className="space-y-2 pb-3 pt-2">
               <Link
                 href="/blog"
-                className="block px-3 py-2 text-base font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="block px-3 py-2 text-base font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/about"
-                className="block px-3 py-2 text-base font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="block px-3 py-2 text-base font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About

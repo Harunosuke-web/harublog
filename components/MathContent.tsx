@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
+import PrismCodeBlock from './PrismCodeBlock';
 
 interface MathContentProps {
   content: string;
@@ -18,17 +19,34 @@ declare global {
 export default function MathContent({ content, onHeadingsExtracted }: MathContentProps) {
   const [mounted, setMounted] = useState(false);
   const [processedContent, setProcessedContent] = useState('');
+  const processedContentRef = useRef('');
+  const contentRef = useRef('');
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Memoize content to prevent unnecessary re-processing
+  const memoizedContent = useMemo(() => content, [content]);
+
   useEffect(() => {
-    // Markdownを手動でHTMLに変換（数式を保護）
+    // Only process if content actually changed
+    if (memoizedContent === contentRef.current) return;
+
+    contentRef.current = memoizedContent;
+    // Markdownを手動でHTMLに変換（数式とコードブロックを保護）
     const processMarkdown = (md: string) => {
-      // 数式を一時的に保護
+      // 数式とコードブロックを一時的に保護
       const mathBlocks: string[] = [];
+      const codeBlocks: Array<{ language: string; code: string; id: string }> = [];
       let processed = md;
+
+      // コードブロック（```）を保護
+      processed = processed.replace(/```(\w+)?\s*\n([\s\S]*?)\n```/g, (match, language, code) => {
+        const codeBlockId = `__CODE_BLOCK_${codeBlocks.length}__`;
+        codeBlocks.push({ language: language || '', code: code.trim(), id: codeBlockId });
+        return codeBlockId;
+      });
 
       // $$...$$を保護
       processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
@@ -45,9 +63,10 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
       const generateId = (text: string) => {
         return text
           .toLowerCase()
-          .replace(/[^\w\s-]/g, '')
+          .replace(/[^\w\s-ァ-ヶー々〇-龯]/g, '') // Allow Japanese characters
           .replace(/\s+/g, '-')
           .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
           .trim();
       };
 
@@ -97,6 +116,12 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
         .replace(/^(?!<[h1-6]|<blockquote|<\/p>)(.+)$/gm, '<p>$1</p>')
         .replace(/<p><\/p>/g, '');
 
+      // コードブロックを復元 - React コンポーネントへの置き換えマーカーとして残す
+      codeBlocks.forEach((codeBlock, index) => {
+        const codeBlockHtml = `<div data-code-block='${JSON.stringify(codeBlock).replace(/'/g, "&apos;")}'></div>`;
+        processed = processed.replace(codeBlock.id, codeBlockHtml);
+      });
+
       // 数式を復元
       mathBlocks.forEach((mathBlock, index) => {
         processed = processed.replace(`__MATH_BLOCK_${index}__`, mathBlock);
@@ -106,8 +131,13 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
       return processed;
     };
 
-    const htmlContent = processMarkdown(content);
-    setProcessedContent(htmlContent);
+    const htmlContent = processMarkdown(memoizedContent);
+
+    // Only update state if content actually changed
+    if (htmlContent !== processedContentRef.current) {
+      processedContentRef.current = htmlContent;
+      setProcessedContent(htmlContent);
+    }
 
     // 見出しを抽出
     if (onHeadingsExtracted) {
@@ -115,38 +145,52 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
       const headingRegex = /^(#{1,6})\s+(.+)$/gm;
       let match;
 
-      while ((match = headingRegex.exec(content)) !== null) {
-        const level = match[1].length;
-        const title = match[2].trim();
-        const id = title
+      const generateIdForHeading = (text: string) => {
+        return text
           .toLowerCase()
-          .replace(/[^\w\s-]/g, '')
+          .replace(/[^\w\s-ァ-ヶー々〇-龯]/g, '') // Allow Japanese characters
           .replace(/\s+/g, '-')
           .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
           .trim();
+      };
+
+      while ((match = headingRegex.exec(memoizedContent)) !== null) {
+        const level = match[1].length;
+        const title = match[2].trim();
+        const id = generateIdForHeading(title);
 
         headings.push({ id, title, level });
       }
 
       onHeadingsExtracted(headings);
     }
-  }, [content, onHeadingsExtracted]);
+  }, [memoizedContent, onHeadingsExtracted]);
 
   useEffect(() => {
-    if (mounted && processedContent && typeof window !== 'undefined' && window.MathJax) {
-      const processMath = async () => {
+    if (!mounted || !processedContent || typeof window === 'undefined') return;
+
+    const processMath = async () => {
+      // Wait for MathJax to be available
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds max wait
+
+      while (!window.MathJax && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
         try {
-          if (window.MathJax.typesetPromise) {
-            await window.MathJax.typesetPromise();
-          }
+          await window.MathJax.typesetPromise();
         } catch (error) {
           console.warn('MathJax processing error:', error);
         }
-      };
+      }
+    };
 
-      const timer = setTimeout(processMath, 500);
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(processMath, 100);
+    return () => clearTimeout(timer);
   }, [mounted, processedContent]);
 
   // サーバーサイドでは簡単なテキスト表示
@@ -154,11 +198,61 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
     return <div className="prose prose-lg dark:prose-invert max-w-none">Loading content...</div>;
   }
 
-  // クライアントサイドでHTML表示
+  // コードブロックを抽出してReactコンポーネントに変換
+  const renderContentWithCodeBlocks = () => {
+    // コードブロックのマーカーを探して分割
+    const parts = processedContent.split(/(<div data-code-block='[^']*'><\/div>)/);
+
+    return parts.map((part, index) => {
+      // コードブロックマーカーかどうか判定
+      const codeBlockMatch = part.match(/^<div data-code-block='([^']*)'><\/div>$/);
+
+      if (codeBlockMatch) {
+        try {
+          // JSONデコードして元のコードブロック情報を取得
+          const jsonString = codeBlockMatch[1].replace(/&apos;/g, "'");
+
+          // 空文字列や無効なJSONをチェック
+          if (!jsonString || jsonString.trim() === '') {
+            console.warn('Empty JSON string for code block');
+            return <div key={`code-empty-${index}`}>Empty code block</div>;
+          }
+
+          const codeBlock = JSON.parse(jsonString);
+
+          // コードブロックの必要なプロパティをチェック
+          if (!codeBlock || typeof codeBlock.code !== 'string') {
+            console.warn('Invalid code block structure:', codeBlock);
+            return <div key={`code-invalid-${index}`}>Invalid code block</div>;
+          }
+
+          return (
+            <PrismCodeBlock
+              key={`code-block-${index}`}
+              code={codeBlock.code || ''}
+              language={codeBlock.language || 'text'}
+            />
+          );
+        } catch (error) {
+          console.warn('Failed to parse code block:', error, 'Raw:', codeBlockMatch[1]);
+          return <div key={`code-error-${index}`}>Code block parsing error</div>;
+        }
+      } else {
+        // 通常のHTMLコンテンツ
+        return (
+          <div
+            key={`html-${index}`}
+            dangerouslySetInnerHTML={{ __html: part }}
+          />
+        );
+      }
+    });
+  };
+
+  // クライアントサイドでコンテンツを表示
   return (
-    <div
-      className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-medium prose-p:font-light prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300"
-      dangerouslySetInnerHTML={{ __html: processedContent }}
-    />
+    <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-medium prose-p:font-light prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300">
+      {renderContentWithCodeBlocks()}
+    </div>
   );
 }
