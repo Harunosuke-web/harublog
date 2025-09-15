@@ -24,3 +24,91 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* MathJax 3 styling for beautiful LaTeX-like display */
+
+/* Display math ($$...$$) - centered block equations */
+mjx-container[jax="CHTML"][display="true"] {
+  display: block !important;
+  margin: 2rem auto !important;
+  text-align: center !important;
+  width: 100% !important;
+  font-size: 1.4em !important;
+  line-height: 1.6 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Inline math ($...$) */
+mjx-container[jax="CHTML"]:not([display="true"]) {
+  display: inline !important;
+  margin: 0 0.2rem !important;
+  font-size: 1.1em !important;
+  vertical-align: baseline !important;
+}
+
+/* Alternative selectors for different MathJax configurations */
+.MathJax_Display,
+.mjx-chtml[display="block"] {
+  display: block !important;
+  margin: 2rem auto !important;
+  text-align: center !important;
+  width: 100% !important;
+  font-size: 1.4em !important;
+  overflow-x: auto;
+}
+
+/* Prose container math styling */
+.prose mjx-container[display="true"],
+.prose .MathJax_Display {
+  margin: 2.5rem auto !important;
+  width: 100% !important;
+  text-align: center !important;
+  font-size: 1.4em !important;
+}
+
+/* Math font styling - use MathJax default fonts */
+
+/* Dark mode support */
+.dark mjx-container,
+.dark .MathJax {
+  color: rgb(229, 231, 235) !important;
+}
+
+.dark mjx-container svg {
+  color: rgb(229, 231, 235) !important;
+  fill: rgb(229, 231, 235) !important;
+}
+
+/* Matrix and cases styling */
+mjx-container mjx-mtable {
+  margin: 0.5rem auto !important;
+}
+
+/* Responsive math sizing */
+@media (max-width: 640px) {
+  mjx-container[display="true"] {
+    font-size: 1.2em !important;
+    margin: 1.5rem auto !important;
+  }
+
+  mjx-container[jax="CHTML"]:not([display="true"]) {
+    font-size: 1.05em !important;
+  }
+}
+
+/* Force center alignment for all display math */
+mjx-container[display="true"] mjx-math {
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+/* Ensure all display math is centered */
+mjx-container[jax="CHTML"][display="true"] mjx-math,
+mjx-container[display="true"],
+.MathJax_Display {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
