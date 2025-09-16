@@ -2,11 +2,9 @@
 title: "コードブロックテスト"
 date: "2025-01-16"
 excerpt: "コードブロックの表示とコピー機能のテスト"
-category: "programming"
-categorySlug: "programming"
+category: "Programming"
 tags: ["programming", "test"]
 author: "ハルノスケ"
-readTime: 5
 ---
 
 # コードブロックテスト

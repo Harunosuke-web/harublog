@@ -3,8 +3,7 @@ title: "機械学習入門：基本概念から実践まで"
 excerpt: "機械学習の基本概念を理解し、実際にPythonを使ってシンプルなモデルを構築する方法を学びましょう。"
 date: "2024-12-02"
 author: "ハルノスケ"
-category: "programming"
-categorySlug: "programming"
+category: "Machine Learning"
 tags: ["Machine Learning", "Python", "AI", "Data Science"]
 tagSlugs: ["machine-learning", "python", "ai", "data-science"]
 image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=400&fit=crop&crop=smart"

@@ -3,8 +3,7 @@ title: "RESTful API設計の実践ガイド"
 excerpt: "スケーラブルで保守しやすいRESTful APIを設計するためのベストプラクティスと実装例を紹介します。"
 date: "2024-11-30"
 author: "ハルノスケ"
-category: "web-development"
-categorySlug: "web-development"
+category: "Backend Development"
 tags: ["API", "REST", "Backend", "Design"]
 tagSlugs: ["api", "rest", "backend", "design"]
 image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop&crop=smart"

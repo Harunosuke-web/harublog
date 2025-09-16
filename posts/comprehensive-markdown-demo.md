@@ -2,8 +2,7 @@
 title: "Markdownの全機能を活用した包括的なブログ記事サンプル：フロントエンド開発における最新技術とベストプラクティスの詳細ガイド"
 date: "2024-03-15"
 excerpt: "この記事では、Markdownの全ての機能を網羅的に紹介しながら、現代のフロントエンド開発で必要不可欠な技術スタックについて詳しく解説します。React、Next.js、TypeScript、Tailwind CSS、そしてモダンな開発ツールの実践的な使用方法から、パフォーマンス最適化、アクセシビリティの向上、SEO対策まで、実際のプロジェクトで即座に活用できる知識とテクニックを豊富なコード例とともに提供します。さらに、チーム開発における効率的なワークフロー、コードレビューのベストプラクティス、CI/CDパイプラインの構築方法についても触れ、スケーラブルで保守性の高いアプリケーション開発のための総合的なガイドとして構成されています。"
-category: "フロントエンド"
-categorySlug: "frontend"
+category: "Frontend Development"
 tags: ["React", "Next.js", "TypeScript", "Tailwind CSS", "パフォーマンス", "アクセシビリティ", "SEO"]
 tagSlugs: ["react", "next-js", "typescript", "tailwind-css", "performance", "accessibility", "seo"]
 image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop&crop=smart"

@@ -3,8 +3,7 @@ title: "データベース最適化の基本テクニック"
 excerpt: "アプリケーションのパフォーマンスを向上させるためのデータベース最適化手法を実例とともに解説します。"
 date: "2024-12-04"
 author: "ハルノスケ"
-category: "programming"
-categorySlug: "programming"
+category: "Database"
 tags: ["Database", "SQL", "Performance", "Optimization"]
 tagSlugs: ["database", "sql", "performance", "optimization"]
 image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&crop=smart"
