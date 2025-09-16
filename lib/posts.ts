@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { Post } from './types';
+import { Post, ValidCategory } from './types';
 import { getCategorySlug, getTagSlug } from './slugs';
 
 // Re-export for backward compatibility
@@ -31,10 +31,77 @@ export function getPostBySlug(slug: string): Post | null {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
-  // categorySlugが存在しない場合はエラーを出す
-  if (!data.categorySlug) {
-    throw new Error(`Missing required categorySlug in post: ${realSlug}.md`);
+  // カテゴリの検証（必須フィールド）
+  if (!data.category) {
+    throw new Error(`Missing required category in post: ${realSlug}.md`);
   }
+
+  // カテゴリの自動変換マップ
+  const categoryMap: { [key: string]: ValidCategory } = {
+    'programming': 'Programming',
+    'Programming': 'Programming',
+    'web-development': 'Web Development',
+    'Web Development': 'Web Development',
+    'frontend': 'Frontend Development',
+    'Frontend Development': 'Frontend Development',
+    'フロントエンド': 'Frontend Development',
+    'math': 'Mathematics',
+    'mathematics': 'Mathematics',
+    'Mathematics': 'Mathematics',
+    'machine-learning': 'Machine Learning',
+    'Machine Learning': 'Machine Learning',
+    'apple': 'Apple',
+    'Apple': 'Apple',
+    'design': 'Design',
+    'Design': 'Design',
+    'devops': 'DevOps',
+    'DevOps': 'DevOps',
+    'database': 'Database',
+    'Database': 'Database',
+    'security': 'Security',
+    'Security': 'Security',
+    'mobile': 'Mobile Development',
+    'Mobile Development': 'Mobile Development',
+    'backend': 'Backend Development',
+    'Backend Development': 'Backend Development'
+  };
+
+  // カテゴリの変換
+  const normalizedCategory = categoryMap[data.category];
+
+  if (!normalizedCategory) {
+    const validCategories: ValidCategory[] = [
+      'Programming',
+      'Web Development',
+      'Frontend Development',
+      'Mathematics',
+      'Machine Learning',
+      'Apple',
+      'Design',
+      'DevOps',
+      'Database',
+      'Security',
+      'Mobile Development',
+      'Backend Development'
+    ];
+    throw new Error(`Invalid category "${data.category}" in post: ${realSlug}.md. Valid categories: ${validCategories.join(', ')}`);
+  }
+
+  // 本文からの自動excerpt生成（手動記入が優先）
+  const generateExcerpt = (content: string): string => {
+    return content
+      .replace(/^#{1,6}\s+.*$/gm, '')           // 見出し除去
+      .replace(/\*\*(.*?)\*\*/g, '$1')         // Bold除去
+      .replace(/\*(.*?)\*/g, '$1')             // Italic除去
+      .replace(/`(.*?)`/g, '$1')               // インラインコード除去
+      .replace(/```[\s\S]*?```/g, '')          // コードブロック除去
+      .replace(/!\[.*?\]\(.*?\)/g, '')         // 画像除去
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // リンク除去（テキストのみ残す）
+      .replace(/\n+/g, ' ')                    // 改行をスペースに
+      .trim()
+      .slice(0, 150)
+      .replace(/\s+$/, '') + '...';
+  };
 
   // 読了時間を計算（平均読速度: 200文字/分）
   const readTime = Math.ceil(content.length / 200);
@@ -42,13 +109,11 @@ export function getPostBySlug(slug: string): Post | null {
   return {
     slug: realSlug,
     title: data.title || '',
-    excerpt: data.excerpt || '',
+    excerpt: data.excerpt || generateExcerpt(content),
     date: data.date || '',
     author: data.author || 'ハルノスケ',
     tags: data.tags || [],
-    category: data.category || '未分類',
-    categorySlug: data.categorySlug,
-    tagSlugs: data.tagSlugs || (data.tags || []).map((tag: string) => getTagSlug(tag)),
+    category: normalizedCategory,
     content,
     readTime,
     image: data.image || `https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&crop=smart`,
@@ -77,17 +142,12 @@ export function getPostsByCategory(category: string): Post[] {
 
 export function getPostsByCategorySlug(categorySlug: string): Post[] {
   const allPosts = getAllPosts();
-  return allPosts.filter((post) => post.categorySlug === categorySlug);
+  return allPosts.filter((post) => getCategorySlug(post.category) === categorySlug);
 }
 
 export function getPostsByTagSlug(tagSlug: string): Post[] {
   const allPosts = getAllPosts();
   return allPosts.filter((post) => {
-    // カスタムスラッグが設定されている場合はそれを使用
-    if (post.tagSlugs?.includes(tagSlug)) {
-      return true;
-    }
-    // フォールバック: 自動生成スラッグと比較
     return post.tags.some(tag => getTagSlug(tag) === tagSlug);
   });
 }
@@ -103,7 +163,7 @@ export function getAllCategorySlugs(): string[] {
   const slugs = new Set<string>();
 
   allPosts.forEach(post => {
-    slugs.add(post.categorySlug);
+    slugs.add(getCategorySlug(post.category));
   });
 
   return Array.from(slugs).sort();
@@ -114,13 +174,7 @@ export function getAllTagSlugs(): string[] {
   const slugs = new Set<string>();
 
   allPosts.forEach(post => {
-    // カスタムスラッグが設定されている場合はそれを使用
-    if (post.tagSlugs) {
-      post.tagSlugs.forEach(slug => slugs.add(slug));
-    } else {
-      // フォールバック: 自動生成スラッグ
-      post.tags.forEach(tag => slugs.add(getTagSlug(tag)));
-    }
+    post.tags.forEach(tag => slugs.add(getTagSlug(tag)));
   });
 
   return Array.from(slugs).sort();
@@ -136,7 +190,7 @@ export function getCategoryWithCount(): Array<{ category: string; count: number 
 
   return Object.entries(categoryCount)
     .map(([category, count]) => ({ category, count }))
-    .sort((a, b) => a.category.localeCompare(b.category));
+    .sort((a, b) => b.count - a.count);
 }
 
 export function getAllTags(): string[] {
