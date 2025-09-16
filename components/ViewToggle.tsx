@@ -32,7 +32,7 @@ const VIEW_OPTIONS: Record<ViewType, ViewOption> = {
     label: 'ギャラリー表示',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/>
+        <path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zm-9 9h7v7H4v-7zm9 0h7v7h-7v-7z"/>
       </svg>
     )
   }
@@ -49,7 +49,7 @@ export default function ViewToggle({ currentView, availableViews, onViewChange }
   const views = availableViews || ['list', 'tight'];
 
   return (
-    <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+    <div className="flex items-center gap-1 rounded-md p-1">
       {views.map((viewType) => {
         const option = VIEW_OPTIONS[viewType];
         const isActive = currentView === viewType;
@@ -58,12 +58,12 @@ export default function ViewToggle({ currentView, availableViews, onViewChange }
           <button
             key={viewType}
             onClick={() => onViewChange(viewType)}
-            className={`p-2 rounded-md transition-colors ${
+            className={`p-2 rounded-md transition-colors fast-tooltip ${
               isActive
-                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
-            title={option.label}
+            data-tooltip={option.label}
           >
             {option.icon}
           </button>

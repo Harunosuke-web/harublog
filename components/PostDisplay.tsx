@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Post } from '@/lib/types';
 import PostCard from '@/components/PostCard';
 import { ViewType } from '@/components/ViewToggle';
+import Button from '@/components/Button';
 
 interface PostDisplayProps {
   posts: Post[];
@@ -43,11 +44,8 @@ export default function PostDisplay({
 
     return (
       <div className="mt-12 text-center">
-        <Link
-          href="/blog"
-          className="inline-flex items-center px-6 py-3 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200"
-        >
-          もっと記事を読む
+        <Button href="/blog">
+          Read More
           <svg
             className="ml-2 w-4 h-4"
             fill="none"
@@ -61,7 +59,7 @@ export default function PostDisplay({
               d="M17 8l4 4m0 0l-4 4m4-4H3"
             />
           </svg>
-        </Link>
+        </Button>
       </div>
     );
   };
