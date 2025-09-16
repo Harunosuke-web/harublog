@@ -7,6 +7,7 @@ import DecorativeHeading from '@/components/DecorativeHeading';
 import PageLayout from '@/components/PageLayout';
 import ViewToggle, { ViewType } from '@/components/ViewToggle';
 import PostDisplay from '@/components/PostDisplay';
+import Button from '@/components/Button';
 
 interface HomeClientProps {
   featuredPosts: Post[];
@@ -29,12 +30,22 @@ export default function HomeClient({ featuredPosts, maxPosts = 4, featuredPostSl
             技術とクリエイティブを探求する個人ブログ。AI、Development、数学について書いています。
           </p>
           <div className="mt-12 flex items-center justify-center gap-x-6">
-            <Link
-              href="/blog"
-              className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-normal text-white shadow-sm hover:bg-blue-500 transition-all duration-200 hover:shadow-md"
-            >
+            <Button href="/blog">
               ブログを読む
-            </Link>
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </Button>
             <Link
               href="/about"
               className="text-sm font-normal leading-6 text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
@@ -87,11 +98,10 @@ export default function HomeClient({ featuredPosts, maxPosts = 4, featuredPostSl
             About
           </DecorativeHeading>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-            こんにちは、ハルノスケです。技術とクリエイティブの境界を探求することに情熱を注いでいます。
-            このブログでは、プログラミング、数学、デザインに関する知識や体験を共有しています。
+            こんにちは、ハルノスケです。技術とクリエイティブを探求することに情熱を注いでいます。
+            このブログでは、AIを使った技術、プログラミング、数学に関する知識や体験を共有しています。
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-            複雑な数式から美しいUIデザインまで、様々なトピックを扱い、
             読者の皆さんと一緒に学び成長していけるようなコンテンツを心がけています。
           </p>
         </div>

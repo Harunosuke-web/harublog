@@ -2,6 +2,11 @@ import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import BlogPostClient from "./BlogPostClient";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CategoryButton from "@/components/CategoryButton";
+import TagButton from "@/components/TagButton";
+import Breadcrumb from "@/components/Breadcrumb";
+import DateFormatter from "@/components/DateFormatter";
+import { getCategorySlug, getTagSlug } from "@/lib/slugs";
 
 interface BlogPostProps {
   params: Promise<{ slug: string }>;
@@ -19,58 +24,35 @@ export default async function BlogPost({ params }: BlogPostProps) {
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32 relative">
       <article className="mx-auto max-w-4xl">
         {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-            <li>
-              <Link
-                href="/"
-                className="hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
-              >
-                Home
-              </Link>
-            </li>
-            <li>/</li>
-            <li>
-              <Link
-                href="/blog"
-                className="hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
-              >
-                Blog
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="text-gray-700 dark:text-gray-300">{post.title}</li>
-          </ol>
-        </nav>
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Blog', href: '/blog' },
+            { label: post.category, href: `/blog/category/${getCategorySlug(post.category)}` }
+          ]}
+        />
 
         {/* Article Header */}
         <header className="mb-16">
           <div className="flex items-center gap-x-4 text-xs mb-6">
-            <time
-              dateTime={post.date}
+            <DateFormatter
+              dateString={post.date}
               className="text-gray-500 dark:text-gray-400"
-            >
-              {new Date(post.date).toLocaleDateString("ja-JP", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-            <Link
-              href={`/blog/category/${encodeURIComponent(post.category)}`}
-              className="rounded-full bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-            >
-              {post.category}
-            </Link>
+            />
+            <CategoryButton
+              category={post.category}
+              categorySlug={getCategorySlug(post.category)}
+              variant="inline"
+              showIcon={true}
+            />
             <div className="flex gap-2">
               {post.tags.map((tag, index) => (
-                <Link
+                <TagButton
                   key={`${post.slug}-detail-tag-${index}-${tag}`}
-                  href={`/blog/tag/${encodeURIComponent(tag)}`}
-                  className="rounded-full bg-gray-50 dark:bg-gray-800 px-3 py-1.5 font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  #{tag}
-                </Link>
+                  tag={tag}
+                  tagSlug={getTagSlug(tag)}
+                  variant="default"
+                />
               ))}
             </div>
           </div>

@@ -5,6 +5,7 @@ import { Post } from '@/lib/types';
 import PostCard from '@/components/PostCard';
 import ViewToggle, { ViewType } from '@/components/ViewToggle';
 import Pagination from '@/components/Pagination';
+import Button from '@/components/Button';
 
 interface BlogClientProps {
   posts: Post[];
@@ -134,12 +135,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
           {/* Load More Button */}
           {hasMorePosts && (
             <div className="mx-auto max-w-4xl mt-12 text-center">
-              <button
-                onClick={handleLoadMore}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              >
+              <Button onClick={handleLoadMore}>
                 さらに読み込む ({getPageSize(viewMode)}件)
-              </button>
+              </Button>
             </div>
           )}
         </>

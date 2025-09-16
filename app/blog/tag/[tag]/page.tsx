@@ -1,4 +1,5 @@
 import { getPostsByTagSlug, getAllTagSlugs } from '@/lib/posts';
+import { getTagDisplayName } from '@/lib/slugs';
 import { notFound } from 'next/navigation';
 import CategoryTagLayout from '@/components/CategoryTagLayout';
 
@@ -15,23 +16,8 @@ export default async function TagPage({ params }: TagPageProps) {
     notFound();
   }
 
-  // カスタムスラッグまたは自動生成スラッグから元のタグ名を取得
-  let tagName = tagSlug;
-  for (const post of posts) {
-    const tagIndex = post.tagSlugs?.indexOf(tagSlug);
-    if (tagIndex !== undefined && tagIndex >= 0) {
-      tagName = post.tags[tagIndex];
-      break;
-    }
-    // フォールバック: 自動生成スラッグで検索
-    const autoTag = post.tags.find(tag =>
-      tag.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '-') === tagSlug
-    );
-    if (autoTag) {
-      tagName = autoTag;
-      break;
-    }
-  }
+  // URLスラッグから表示名を生成
+  const tagName = getTagDisplayName(tagSlug);
 
   return (
     <CategoryTagLayout

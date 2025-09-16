@@ -112,3 +112,32 @@ mjx-container[display="true"],
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
+/* Fast tooltip */
+.fast-tooltip {
+  position: relative;
+}
+
+.fast-tooltip::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+  z-index: 1000;
+  margin-bottom: 4px;
+}
+
+.fast-tooltip:hover::before {
+  opacity: 1;
+  transition-delay: 0.2s;
+}

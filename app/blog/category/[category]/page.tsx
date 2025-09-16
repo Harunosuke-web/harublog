@@ -1,4 +1,5 @@
 import { getPostsByCategorySlug, getAllCategorySlugs } from '@/lib/posts';
+import { getCategoryDisplayName } from '@/lib/slugs';
 import { notFound } from 'next/navigation';
 import CategoryTagLayout from '@/components/CategoryTagLayout';
 
@@ -15,7 +16,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const categoryName = posts[0].category;
+  // URLスラッグから表示名を生成
+  const categoryName = getCategoryDisplayName(categorySlug);
 
   return (
     <CategoryTagLayout
