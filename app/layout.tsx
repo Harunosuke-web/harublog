@@ -25,21 +25,28 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "ハルノスケブログ",
+  title: "Harunosuke Web",
   description: "技術とクリエイティブを探求するブログ",
   keywords: ["技術", "プログラミング", "数学", "クリエイティブ", "ブログ"],
   authors: [{ name: "ハルノスケ" }],
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        { url: '/rss.xml', title: 'Harunosuke Web RSS Feed' }
+      ]
+    }
+  },
   openGraph: {
-    title: "ハルノスケのブログ",
+    title: "Harunosuke Web",
     description: "技術とクリエイティブを探求するブログ",
     url: "https://harmodify.jp",
-    siteName: "ハルノスケのブログ",
+    siteName: "Harunosuke Web",
     locale: "ja_JP",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ハルノスケのブログ",
+    title: "Harunosuke Web",
     description: "技術とクリエイティブを探求するブログ",
   },
 };

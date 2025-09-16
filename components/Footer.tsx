@@ -6,12 +6,12 @@ export default function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="py-12">
+        <div className="py-4">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8 xl:col-span-1">
               <div>
                 <span className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  Harunosuke web
+                  Harunosuke Web
                 </span>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                   技術とクリエイティブを探求するブログ
@@ -77,6 +77,14 @@ export default function Footer() {
                         About
                       </Link>
                     </li>
+                    <li>
+                      <Link
+                        href="/rss.xml"
+                        className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      >
+                        RSS
+                      </Link>
+                    </li>
                   </ul>
                 </div>
                 <div className="mt-10 md:mt-0">
@@ -91,7 +99,7 @@ export default function Footer() {
                           className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex justify-between"
                         >
                           <span>{category}</span>
-                          <span className="text-gray-400 dark:text-gray-500">({count})</span>
+                          <span className="text-gray-400 dark:text-gray-500 tabular-nums">({count})</span>
                         </Link>
                       </li>
                     ))}
@@ -103,7 +111,7 @@ export default function Footer() {
           <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                &copy; 2025 Harunosuke web. All rights reserved.
+                &copy; 2025 Harunosuke Web. All rights reserved.
               </p>
               <div className="mt-4 sm:mt-0 flex items-center space-x-4">
                 <Link
@@ -118,6 +126,13 @@ export default function Footer() {
                   className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 >
                   Contact
+                </Link>
+                <span className="text-xs text-gray-400 dark:text-gray-500">|</span>
+                <Link
+                  href="/sitemap.xml"
+                  className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                >
+                  Sitemap
                 </Link>
               </div>
             </div>

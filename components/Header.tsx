@@ -45,7 +45,7 @@ export default function Header() {
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5 cursor-pointer">
               <span className="text-xl font-poppins font-medium text-gray-800 dark:text-gray-100 tracking-wide">
-                harunosuke web
+                Harunosuke Web
               </span>
             </Link>
           </div>
