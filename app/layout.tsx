@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import Header from "@/components/Header";
@@ -7,12 +7,25 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "はるのすけのブログ",
+  title: "ハルノスケブログ",
   description: "技術とクリエイティブを探求するブログ",
   keywords: ["技術", "プログラミング", "数学", "クリエイティブ", "ブログ"],
   authors: [{ name: "ハルノスケ" }],
@@ -20,7 +33,7 @@ export const metadata: Metadata = {
     title: "ハルノスケのブログ",
     description: "技術とクリエイティブを探求するブログ",
     url: "https://harmodify.jp",
-    siteName: "はるのすけのブログ",
+    siteName: "ハルノスケのブログ",
     locale: "ja_JP",
     type: "website",
   },
@@ -84,12 +97,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.className} antialiased bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${poppins.variable} font-inter antialiased bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100`}
       >
         <Providers>
-          <div className="min-h-screen">
+          <div className="min-h-screen flex flex-col">
             <Header />
-            <main>{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </div>
         </Providers>

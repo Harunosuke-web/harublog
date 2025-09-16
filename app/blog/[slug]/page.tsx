@@ -16,8 +16,8 @@ export default async function BlogPost({ params }: BlogPostProps) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-      <article className="mx-auto max-w-3xl py-24">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32 relative">
+      <article className="mx-auto max-w-4xl">
         {/* Breadcrumb */}
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
@@ -56,19 +56,26 @@ export default async function BlogPost({ params }: BlogPostProps) {
                 day: "numeric",
               })}
             </time>
+            <Link
+              href={`/blog/category/${encodeURIComponent(post.category)}`}
+              className="rounded-full bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+            >
+              {post.category}
+            </Link>
             <div className="flex gap-2">
               {post.tags.map((tag, index) => (
-                <span
+                <Link
                   key={`${post.slug}-detail-tag-${index}-${tag}`}
-                  className="rounded-full bg-gray-50 dark:bg-gray-800 px-3 py-1.5 font-medium text-gray-600 dark:text-gray-300"
+                  href={`/blog/tag/${encodeURIComponent(tag)}`}
+                  className="rounded-full bg-gray-50 dark:bg-gray-800 px-3 py-1.5 font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
-                  {tag}
-                </span>
+                  #{tag}
+                </Link>
               ))}
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl mb-6">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl mb-6">
             {post.title}
           </h1>
 
@@ -76,10 +83,6 @@ export default async function BlogPost({ params }: BlogPostProps) {
             <div className="flex items-center gap-x-2">
               <span className="font-semibold text-gray-900 dark:text-white">
                 {post.author}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400">•</span>
-              <span className="text-gray-600 dark:text-gray-400">
-                {post.readTime}分で読める
               </span>
             </div>
           </div>

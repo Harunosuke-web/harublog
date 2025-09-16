@@ -9,7 +9,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Yu Gothic', 'Hiragino Sans', 'system-ui', 'sans-serif'],
+        inter: ['var(--font-inter)', 'Inter', 'Yu Gothic', 'Hiragino Sans', 'system-ui', 'sans-serif'],
+        poppins: ['var(--font-poppins)', 'Poppins', 'Yu Gothic', 'Hiragino Sans', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', 'monospace'],
+        sans: ['var(--font-inter)', 'Inter', 'Yu Gothic', 'Hiragino Sans', 'system-ui', 'sans-serif'],
         japanese: ['Yu Gothic', 'Hiragino Sans', 'Meiryo', 'sans-serif'],
       },
       fontWeight: {
@@ -32,24 +35,42 @@ module.exports = {
       typography: (theme) => ({
         DEFAULT: {
           css: {
-            fontFamily: theme('fontFamily.sans'),
+            fontFamily: theme('fontFamily.inter'),
             fontWeight: '400',
             lineHeight: '1.7',
             letterSpacing: '0.025em',
             h1: {
+              fontFamily: theme('fontFamily.poppins'),
               fontWeight: '600',
               letterSpacing: '-0.025em',
             },
             h2: {
-              fontWeight: '600',
+              fontFamily: theme('fontFamily.poppins'),
+              fontWeight: '500',
               letterSpacing: '-0.025em',
             },
             h3: {
+              fontFamily: theme('fontFamily.poppins'),
               fontWeight: '500',
               letterSpacing: '-0.01em',
             },
             h4: {
+              fontFamily: theme('fontFamily.poppins'),
               fontWeight: '500',
+            },
+            h5: {
+              fontFamily: theme('fontFamily.poppins'),
+              fontWeight: '500',
+            },
+            h6: {
+              fontFamily: theme('fontFamily.poppins'),
+              fontWeight: '500',
+            },
+            code: {
+              fontFamily: theme('fontFamily.mono'),
+            },
+            'pre code': {
+              fontFamily: theme('fontFamily.mono'),
             },
           },
         },

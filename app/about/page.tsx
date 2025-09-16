@@ -1,14 +1,15 @@
+import PageLayout from '@/components/PageLayout';
+
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
-      <div className="mx-auto max-w-3xl">
+    <PageLayout maxWidth="medium">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl mb-8">
           About
         </h1>
 
         <div className="prose prose-lg dark:prose-invert max-w-none">
           <p className="text-lg leading-8 text-gray-600 dark:text-gray-300 mb-8">
-            こんにちは、はるのすけです。技術とクリエイティブの境界を探求することに情熱を注いでいる個人ブロガーです。
+            こんにちは、ハルノスケです。技術とクリエイティブの境界を探求することに情熱を注いでいる個人ブロガーです。
           </p>
 
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -94,7 +95,6 @@ export default function AboutPage() {
             </p>
           </div>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

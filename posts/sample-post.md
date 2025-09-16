@@ -2,8 +2,10 @@
 title: "MathJaxを使った美しい数式の表示方法"
 excerpt: "ブログで複雑な数学的概念を表現する際に欠かせないMathJaxの使用方法について詳しく解説します。基本的な構文から高度な数式まで幅広くカバーします。"
 date: "2024-12-01"
-author: "はるのすけ"
-tags: ["数学", "MathJax", "Web開発", "技術解説"]
+author: "ハルノスケ"
+category: "math"
+categorySlug: "math"
+tags: ["math", "mathjax", "web-development", "technical-explanation"]
 image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=400&fit=crop&crop=smart"
 ---
 

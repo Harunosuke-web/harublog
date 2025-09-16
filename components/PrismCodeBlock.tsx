@@ -58,8 +58,6 @@ export default function PrismCodeBlock({ code, language }: PrismCodeBlockProps) 
           highlighted = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       }
 
-      console.log(`Highlighting ${normalizedLanguage}:`, code.substring(0, 100));
-      console.log('Highlighted result:', highlighted.substring(0, 200));
       setHighlightedCode(highlighted);
       setIsLoading(false);
     };
@@ -68,22 +66,30 @@ export default function PrismCodeBlock({ code, language }: PrismCodeBlockProps) 
   }, [code, language]);
 
   const highlightJavaScript = (code: string) => {
-    let result = code;
-
-    // 1. Escape HTML first
-    result = result.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // 1. Escape HTML first, before any highlighting
+    let result = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     // Store protected content to avoid conflicts
     const protectedContent: Array<{placeholder: string, content: string}> = [];
     let placeholderCounter = 0;
 
     const createPlaceholder = (content: string) => {
-      const placeholder = `__PLACEHOLDER_${placeholderCounter++}__`;
+      const placeholder = `__UNIQUE_PLACEHOLDER_${placeholderCounter++}_${Date.now()}__`;
       protectedContent.push({ placeholder, content });
       return placeholder;
     };
 
-    // 2. Protect comments first
+    // 2. Process React hooks FIRST (before anything else) - including generic types
+    result = result.replace(/\b(useState|useEffect|useCallback|useMemo|useContext|useRef|useReducer|useImperativeHandle|useLayoutEffect|useDebugValue)(?=\s*(?:<[^>]*>)?\s*\()/g, (match) => {
+      return createPlaceholder(`<span class="token hook">${match}</span>`);
+    });
+
+    // 3. Process React imports (after hooks are protected)
+    result = result.replace(/(import\s+)(React)(\s*,?\s*\{[^}]*\}\s+from\s+['"]react['"])/g, (match, importPart, reactName, restPart) => {
+      return `${createPlaceholder(`<span class="token import-keyword">${importPart.trim()}</span>`)} ${createPlaceholder(`<span class="token import-name">${reactName}</span>`)}${restPart}`;
+    });
+
+    // 3. Protect comments
     result = result.replace(/\/\/.*$/gm, (match) => {
       return createPlaceholder(`<span class="token comment">${match}</span>`);
     });
@@ -91,7 +97,7 @@ export default function PrismCodeBlock({ code, language }: PrismCodeBlockProps) 
       return createPlaceholder(`<span class="token comment">${match}</span>`);
     });
 
-    // 3. Protect strings
+    // 4. Protect strings
     result = result.replace(/`([^`]*)`/g, (match, p1) => {
       return createPlaceholder(`<span class="token string">\`${p1}\`</span>`);
     });
@@ -108,34 +114,77 @@ export default function PrismCodeBlock({ code, language }: PrismCodeBlockProps) 
     });
 
     // 5. Numbers
-    result = result.replace(/\b(0x[0-9a-fA-F]+|0b[01]+|0o[0-7]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b/g, '<span class="token number">$1</span>');
-
-    // 6. Booleans and special values
-    result = result.replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, '<span class="token boolean">$1</span>');
-
-    // 7. Keywords
-    result = result.replace(/\b(abstract|any|as|asserts|bigint|boolean|break|case|catch|class|const|constructor|continue|debugger|declare|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|infer|instanceof|interface|is|keyof|let|module|namespace|never|new|number|object|of|package|private|protected|public|readonly|require|return|set|static|string|super|switch|symbol|this|throw|try|type|typeof|unique|unknown|var|void|while|with|yield)\b/g, '<span class="token keyword">$1</span>');
-
-    // 8. Built-in objects
-    result = result.replace(/\b(Array|Boolean|Date|Error|Function|JSON|Math|Number|Object|Promise|RegExp|String|Symbol|console|document|window|global|process|Buffer|require|module|exports|__dirname|__filename)\b/g, '<span class="token builtin">$1</span>');
-
-    // 9. React specific
-    result = result.replace(/\b(React|useState|useEffect|useCallback|useMemo|useContext|useRef|Component|Fragment|createElement)\b/g, '<span class="token react">$1</span>');
-
-    // 10. Function calls (before class names to prioritize functions)
-    result = result.replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g, '<span class="token function">$1</span>');
-
-    // 11. Class names (PascalCase, but not if already processed)
-    result = result.replace(/\b([A-Z][a-zA-Z0-9_$]*)\b(?![^<]*<\/span>)/g, '<span class="token class-name">$1</span>');
-
-    // 12. Properties (after other processing)
-    result = result.replace(/\.([a-zA-Z_$][a-zA-Z0-9_$]*)\b(?![^<]*<\/span>)/g, '.<span class="token property">$1</span>');
-
-    // Restore protected content
-    protectedContent.forEach(({ placeholder, content }) => {
-      result = result.replace(placeholder, content);
+    result = result.replace(/\b(0x[0-9a-fA-F]+|0b[01]+|0o[0-7]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b/g, (match) => {
+      return createPlaceholder(`<span class="token number">${match}</span>`);
     });
 
+    // 6. Booleans and special values
+    result = result.replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, (match) => {
+      return createPlaceholder(`<span class="token boolean">${match}</span>`);
+    });
+
+
+    // 8. Import/export keywords (C586C0 - pink/purple) - General import/export handling
+    result = result.replace(/\b(import|export|from|as|default)\b/g, (match) => {
+      return createPlaceholder(`<span class="token import-keyword">${match}</span>`);
+    });
+
+    // 8. Storage type keywords (569CD6 - light blue)
+    result = result.replace(/\b(const|let|var|function|class|interface|type|enum|abstract|declare|namespace|module)\b/g, (match) => {
+      return createPlaceholder(`<span class="token storage-keyword">${match}</span>`);
+    });
+
+    // 9. Control flow keywords (C586C0 - pink/purple)
+    result = result.replace(/\b(if|else|for|while|do|switch|case|break|continue|return|try|catch|finally|throw|async|await)\b/g, (match) => {
+      return createPlaceholder(`<span class="token control-keyword">${match}</span>`);
+    });
+
+    // 10. Language constants (569CD6 - light blue)
+    result = result.replace(/\b(this|super|new|delete|typeof|instanceof|in|of)\b/g, (match) => {
+      return createPlaceholder(`<span class="token language-keyword">${match}</span>`);
+    });
+
+    // 11. Access modifiers (569CD6 - light blue)
+    result = result.replace(/\b(private|protected|public|readonly|static|extends|implements|get|set)\b/g, (match) => {
+      return createPlaceholder(`<span class="token modifier-keyword">${match}</span>`);
+    });
+
+    // 12. Type keywords (4EC9B0 - cyan)
+    result = result.replace(/\b(string|number|boolean|object|any|unknown|never|void|bigint|symbol|unique|asserts|infer|keyof|is|debugger|with|yield)\b/g, (match) => {
+      return createPlaceholder(`<span class="token type-keyword">${match}</span>`);
+    });
+
+    // 8. Built-in objects
+    result = result.replace(/\b(Array|Boolean|Date|Error|Function|JSON|Math|Number|Object|Promise|RegExp|String|Symbol|console|document|window|global|process|Buffer|require|module|exports|__dirname|__filename)\b/g, (match) => {
+      return createPlaceholder(`<span class="token builtin">${match}</span>`);
+    });
+
+
+    // 10. React as type (green - when used as type)
+    result = result.replace(/\b(React)\s*\.\s*(FC|Component|ReactElement|ReactNode|JSX)/g, (match, react, type) => {
+      return createPlaceholder(`<span class="token type-name">${react}</span>.${createPlaceholder(`<span class="token type-keyword">${type}</span>`)}`);
+    });
+
+    // 11. Function calls (general - should not interfere with protected hooks)
+    result = result.replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)(?=\s*\()/g, (match, p1) => {
+      return createPlaceholder(`<span class="token function">${p1}</span>`);
+    });
+
+    // 11. Class names (PascalCase, but not if already processed)
+    result = result.replace(/\b([A-Z][a-zA-Z0-9_$]*)\b(?![^<]*<\/span>)/g, (match) => {
+      return createPlaceholder(`<span class="token class-name">${match}</span>`);
+    });
+
+    // 12. Properties (after other processing)
+    result = result.replace(/\.([a-zA-Z_$][a-zA-Z0-9_$]*)\b(?![^<]*<\/span>)/g, (match, p1) => {
+      return `.${createPlaceholder(`<span class="token property">${p1}</span>`)}`;
+    });
+
+    // Restore protected content (reverse order to avoid conflicts)
+    for (let i = protectedContent.length - 1; i >= 0; i--) {
+      const { placeholder, content } = protectedContent[i];
+      result = result.replace(new RegExp(placeholder, 'g'), content);
+    }
     return result;
   };
 
@@ -284,7 +333,7 @@ export default function PrismCodeBlock({ code, language }: PrismCodeBlockProps) 
       }
 
       // First handle class/id attributes specially
-      processedAttrs = processedAttrs.replace(/\b(class|id)=(["'])([^'"]*)\2/g, (attrMatch, attrName, quote, value) => {
+      processedAttrs = processedAttrs.replace(/\b(class|id)=(["'])([^'"]*)\2/g, (attrMatch: string, attrName: string, quote: string, value: string) => {
         let highlightedValue = value;
 
         if (attrName === 'class') {
@@ -493,10 +542,55 @@ export default function PrismCodeBlock({ code, language }: PrismCodeBlockProps) 
         </div>
       </pre>
 
-      {/* VSCode Dark Theme inspired syntax highlighting */}
+      {/* VSCode Dark Modern Theme syntax highlighting */}
       <style jsx global>{`
+        .token.import-keyword {
+          color: #C586C0 !important;
+          font-weight: 500;
+        }
+
+        .token.storage-keyword {
+          color: #569CD6 !important;
+          font-weight: 500;
+        }
+
+        .token.control-keyword {
+          color: #C586C0 !important;
+          font-weight: 500;
+        }
+
+        .token.language-keyword {
+          color: #569CD6 !important;
+          font-weight: 500;
+        }
+
+        .token.modifier-keyword {
+          color: #569CD6 !important;
+          font-weight: 500;
+        }
+
+        .token.type-keyword {
+          color: #4EC9B0 !important;
+          font-weight: 500;
+        }
+
+        .token.hook {
+          color: #DCDCAA !important;
+          font-weight: 500;
+        }
+
+        .token.type-name {
+          color: #4EC9B0 !important;
+          font-weight: 500;
+        }
+
+        .token.import-name {
+          color: #9CDCFE !important;
+          font-weight: 500;
+        }
+
         .token.keyword {
-          color: #569cd6 !important;
+          color: #569CD6 !important;
           font-weight: 500;
         }
 

@@ -2,8 +2,10 @@
 title: "Next.js 15の新機能とApp Routerの完全ガイド"
 excerpt: "Next.js 15がリリースされました。App Routerの新機能や改善点、実際の使用方法について詳しく解説します。"
 date: "2024-11-28"
-author: "はるのすけ"
-tags: ["Next.js", "React", "TypeScript", "Web開発"]
+author: "ハルノスケ"
+category: "web-development"
+categorySlug: "web-development"
+tags: ["nextjs", "react", "typescript", "web-development"]
 image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop&crop=smart"
 ---
 

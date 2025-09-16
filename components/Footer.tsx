@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { getCategoryWithCount, getCategorySlug } from "@/lib/posts";
 
 export default function Footer() {
+  const categories = getCategoryWithCount();
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="py-16">
+        <div className="py-12">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8 xl:col-span-1">
               <div>
-                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                <span className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
                   Harunosuke web
                 </span>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -77,13 +79,48 @@ export default function Footer() {
                     </li>
                   </ul>
                 </div>
+                <div className="mt-10 md:mt-0">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    Categories
+                  </h3>
+                  <ul className="mt-6 space-y-4">
+                    {categories.map(({ category, count }) => (
+                      <li key={category}>
+                        <Link
+                          href={`/blog/category/${getCategorySlug(category)}`}
+                          className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex justify-between"
+                        >
+                          <span>{category}</span>
+                          <span className="text-gray-400 dark:text-gray-500">({count})</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-          <div className="mt-16 border-t border-gray-200 dark:border-gray-800 pt-8">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              &copy; 2025 Harunosuke web. All rights reserved.
-            </p>
+          <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                &copy; 2025 Harunosuke web. All rights reserved.
+              </p>
+              <div className="mt-4 sm:mt-0 flex items-center space-x-4">
+                <Link
+                  href="/privacy"
+                  className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                >
+                  Privacy Policy
+                </Link>
+                <span className="text-xs text-gray-400 dark:text-gray-500">|</span>
+                <Link
+                  href="/contact"
+                  className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                >
+                  Contact
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

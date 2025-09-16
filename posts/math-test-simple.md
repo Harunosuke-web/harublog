@@ -2,7 +2,9 @@
 title: "数式テスト（シンプル版）"
 date: "2025-01-15"
 excerpt: "行列と場合分けの表示テスト"
-tags: ["数学", "MathJax", "テスト"]
+category: "math"
+categorySlug: "math"
+tags: ["math", "mathjax", "test"]
 author: "ハルノスケ"
 readTime: 1
 ---

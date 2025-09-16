@@ -4,7 +4,7 @@ import { useState } from 'react';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 import TableOfContents from '@/components/TableOfContents';
 import ShareButtons from '@/components/ShareButtons';
-import { Post } from '@/lib/posts';
+import { Post } from '@/lib/types';
 
 interface TocItem {
   id: string;

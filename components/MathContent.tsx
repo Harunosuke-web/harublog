@@ -74,46 +74,45 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
       processed = processed
         .replace(/^# (.+)$/gm, (match, title) => {
           const id = generateId(title);
-          return `<h1 id="${id}" class="scroll-mt-24 text-3xl font-semibold text-gray-900 dark:text-white mb-8 pb-4 relative">
+          return `<h1 id="${id}" class="scroll-mt-24 text-3xl font-poppins font-bold text-gray-900 dark:text-gray-200 mb-8 pb-2 relative">
             ${title}
-            <div class="absolute -bottom-4 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
           </h1>`;
         })
         .replace(/^## (.+)$/gm, (match, title) => {
           const id = generateId(title);
-          return `<h2 id="${id}" class="scroll-mt-24 text-2xl font-medium text-gray-800 dark:text-white mb-6 mt-12 relative pb-2">
+          return `<h2 id="${id}" class="scroll-mt-24 text-2xl font-poppins font-medium text-gray-800 dark:text-gray-200 mb-6 mt-12 relative pb-2">
             ${title}
-            <div class="absolute bottom-0 left-0 w-full h-px bg-blue-300 dark:bg-blue-600"></div>
+            <div class="absolute bottom-0 left-0 w-full h-px bg-gray-300 dark:bg-gray-600"></div>
           </h2>`;
         })
         .replace(/^### (.+)$/gm, (match, title) => {
           const id = generateId(title);
-          return `<h3 id="${id}" class="scroll-mt-24 text-xl font-medium text-gray-800 dark:text-white mb-4 mt-8 relative pl-4">
-            <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
+          return `<h3 id="${id}" class="scroll-mt-24 text-xl font-poppins font-medium text-gray-800 dark:text-gray-200 mb-4 mt-8 relative pl-4">
+            <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 dark:bg-blue-400"></div>
             ${title}
           </h3>`;
         })
         .replace(/^#### (.+)$/gm, (match, title) => {
           const id = generateId(title);
-          return `<h4 id="${id}" class="scroll-mt-24 text-lg font-medium text-gray-800 dark:text-white mb-3 mt-6 relative pl-3">
-            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full"></div>
+          return `<h4 id="${id}" class="scroll-mt-24 text-lg font-poppins font-medium text-gray-800 dark:text-gray-200 mb-3 mt-6">
             ${title}
           </h4>`;
         })
         .replace(/^##### (.+)$/gm, (match, title) => {
           const id = generateId(title);
-          return `<h5 id="${id}" class="scroll-mt-24 text-base font-medium text-gray-700 dark:text-white mb-3 mt-5">${title}</h5>`;
+          return `<h5 id="${id}" class="scroll-mt-24 text-base font-poppins font-medium text-gray-700 dark:text-gray-200 mb-3 mt-5">${title}</h5>`;
         })
         .replace(/^###### (.+)$/gm, (match, title) => {
           const id = generateId(title);
-          return `<h6 id="${id}" class="scroll-mt-24 text-sm font-medium text-gray-600 dark:text-white mb-2 mt-4">${title}</h6>`;
+          return `<h6 id="${id}" class="scroll-mt-24 text-sm font-poppins font-medium text-gray-600 dark:text-gray-200 mb-2 mt-4">${title}</h6>`;
         })
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/`([^`]+)`/g, '<code class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-sm">$1</code>')
         .replace(/^\> (.+)$/gm, '<blockquote class="border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300">$1</blockquote>')
         .replace(/\n\n/g, '</p><p>')
-        .replace(/^(?!<[h1-6]|<blockquote|<\/p>)(.+)$/gm, '<p>$1</p>')
+        .replace(/^(?!<[h1-6]|<blockquote|<\/p>)(.+)$/gm, '<p class="text-gray-700 dark:text-gray-300">$1</p>')
         .replace(/<p><\/p>/g, '');
 
       // コードブロックを復元 - React コンポーネントへの置き換えマーカーとして残す
@@ -142,6 +141,13 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
     // 見出しを抽出
     if (onHeadingsExtracted) {
       const headings: Array<{ id: string; title: string; level: number }> = [];
+
+      // コードブロックを除外してから見出しを抽出
+      let contentWithoutCodeBlocks = memoizedContent;
+
+      // コードブロック（```）を除外
+      contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/```[\w]*\s*\n[\s\S]*?\n```/g, '');
+
       const headingRegex = /^(#{1,6})\s+(.+)$/gm;
       let match;
 
@@ -155,7 +161,7 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
           .trim();
       };
 
-      while ((match = headingRegex.exec(memoizedContent)) !== null) {
+      while ((match = headingRegex.exec(contentWithoutCodeBlocks)) !== null) {
         const level = match[1].length;
         const title = match[2].trim();
         const id = generateIdForHeading(title);
@@ -251,7 +257,7 @@ export default function MathContent({ content, onHeadingsExtracted }: MathConten
 
   // クライアントサイドでコンテンツを表示
   return (
-    <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-medium prose-p:font-light prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300">
+    <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-medium prose-p:font-light prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300 dark:prose-invert:text-gray-300">
       {renderContentWithCodeBlocks()}
     </div>
   );
