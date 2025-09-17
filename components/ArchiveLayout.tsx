@@ -3,43 +3,37 @@ import { Post } from '@/lib/types';
 import PostCard from '@/components/PostCard';
 import Breadcrumb from '@/components/Breadcrumb';
 
-interface CategoryTagLayoutProps {
-  type: 'Category' | 'Tag';
-  name: string;
+interface ArchiveLayoutProps {
+  title: string;
+  description: string;
   posts: Post[];
-  currentTag?: string;
-  currentCategory?: string;
-  showAllTags?: boolean;
+  breadcrumbItems: Array<{ label: string; href?: string }>;
+  backLinkHref?: string;
+  backLinkText?: string;
 }
 
-export default function CategoryTagLayout({
-  type,
-  name,
+export default function ArchiveLayout({
+  title,
+  description,
   posts,
-  currentTag,
-  currentCategory,
-  showAllTags = false
-}: CategoryTagLayoutProps) {
+  breadcrumbItems,
+  backLinkHref = '/blog',
+  backLinkText = 'ブログ一覧に戻る'
+}: ArchiveLayoutProps) {
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
       <main>
         <div className="mx-auto max-w-4xl">
           {/* Floating Breadcrumb Navigation - above title */}
           <nav aria-label="Breadcrumb" className="-mt-12 mb-2">
-            <Breadcrumb
-              items={[
-                { label: 'Home', href: '/' },
-                { label: 'Blog', href: '/blog' },
-                { label: name }
-              ]}
-            />
+            <Breadcrumb items={breadcrumbItems} />
           </nav>
 
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl mb-4">
-            {type === 'Category' ? 'Category' : 'tag'}: {name}
+            {title}
           </h1>
           <p className="text-lg leading-8 text-gray-600 dark:text-gray-300 mb-16">
-            {posts.length}件の記事があります
+            {description}
           </p>
 
           {/* Posts List */}
@@ -49,9 +43,6 @@ export default function CategoryTagLayout({
                 key={post.slug}
                 post={post}
                 variant="list"
-                currentTag={currentTag}
-                currentCategory={currentCategory}
-                showAllTags={showAllTags}
               />
             ))}
           </div>
@@ -59,10 +50,10 @@ export default function CategoryTagLayout({
           {/* Back to blog link */}
           <div className="mt-16 text-center">
             <Link
-              href="/blog"
+              href={backLinkHref}
               className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer"
             >
-              ← ブログ一覧に戻る
+              ← {backLinkText}
             </Link>
           </div>
         </div>

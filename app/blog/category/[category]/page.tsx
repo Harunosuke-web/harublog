@@ -24,6 +24,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       type="Category"
       name={categoryName}
       posts={posts}
+      currentCategory={categoryName}
     />
   );
 }
