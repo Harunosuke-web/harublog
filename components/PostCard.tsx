@@ -13,6 +13,7 @@ interface PostCardProps {
   post: Post;
   variant?: 'grid' | 'list' | 'tight';
   currentTag?: string; // タグページでハイライト表示用
+  currentCategory?: string; // カテゴリページでハイライト表示用
   showAllTags?: boolean; // タグを全て表示するか制限するか
 }
 
@@ -20,6 +21,7 @@ export default function PostCard({
   post,
   variant = 'list',
   currentTag,
+  currentCategory,
   showAllTags = false
 }: PostCardProps) {
   const router = useRouter();
@@ -44,6 +46,7 @@ export default function PostCard({
               category={post.category}
               categorySlug={getCategorySlug(post.category)}
               variant="tight"
+              currentCategory={currentCategory}
               onClick={(e) => {
                 e.stopPropagation();
                 router.push(`/blog/category/${getCategorySlug(post.category)}`);
@@ -80,6 +83,7 @@ export default function PostCard({
               category={post.category}
               categorySlug={getCategorySlug(post.category)}
               variant="overlay"
+              currentCategory={currentCategory}
               onClick={(e) => {
                 e.stopPropagation();
                 router.push(`/blog/category/${getCategorySlug(post.category)}`);
@@ -133,54 +137,51 @@ export default function PostCard({
     >
       {/* Top row - Image, Title, Excerpt with equal heights */}
       <div className="flex gap-3 mb-2">
-        {/* Image - smaller size */}
-        <div className="w-36 flex-shrink-0">
-          <div className="relative w-36 aspect-[4/3] overflow-hidden">
+        {/* Image - clean without overlay */}
+        <div className="w-32 flex-shrink-0">
+          <div className="relative w-32 aspect-[4/3] overflow-hidden">
             <Image
               src={post.image || 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&crop=smart'}
               alt={post.title}
               fill
               className="object-cover"
             />
-            {/* Category overlay on image */}
-            <CategoryButton
-              category={post.category}
-              categorySlug={getCategorySlug(post.category)}
-              variant="overlay"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push(`/blog/category/${getCategorySlug(post.category)}`);
-              }}
-              className="relative z-10"
-            />
           </div>
         </div>
 
         {/* Content area with height matching image */}
-        <div className="flex-1 min-w-0 flex flex-col h-[108px]">
+        <div className="flex-1 min-w-0 flex flex-col h-[96px]">
           {/* Title */}
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
             {post.title}
           </h2>
 
-          {/* Excerpt - constrained to remaining height */}
-          <div className="relative flex-1 overflow-hidden">
-            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-              {post.excerpt.length > 120 ? `${post.excerpt.slice(0, 120)}......` : post.excerpt}
-            </p>
-          </div>
-
-          {/* Underline with right-fade gradient - positioned within content area */}
-          <div className="h-0.5 bg-gradient-to-r from-gray-300 dark:from-gray-600 to-transparent group-hover:from-gray-400 dark:group-hover:from-gray-500 transition-colors duration-200 mt-2"></div>
+          {/* Excerpt */}
+          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 ml-4">
+            {post.excerpt.length > 120 ? `${post.excerpt.slice(0, 120)}......` : post.excerpt}
+          </p>
         </div>
       </div>
 
-      {/* Bottom row - Date and Tags */}
+      {/* Bottom row - Date, Category, and Tags */}
       <div className="flex items-center justify-between">
-        <DateFormatter
-          dateString={post.date}
-          className="text-xs text-gray-500 dark:text-gray-400"
-        />
+        <div className="flex items-center gap-3">
+          <DateFormatter
+            dateString={post.date}
+            className="text-xs text-gray-500 dark:text-gray-400"
+          />
+          <CategoryButton
+            category={post.category}
+            categorySlug={getCategorySlug(post.category)}
+            variant="inline"
+            currentCategory={currentCategory}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/blog/category/${getCategorySlug(post.category)}`);
+            }}
+            className="relative z-10"
+          />
+        </div>
 
         <div className="flex flex-wrap gap-1">
           {(showAllTags ? post.tags : post.tags.slice(0, 3)).map((tag, index) => (
