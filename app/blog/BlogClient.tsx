@@ -79,30 +79,31 @@ export default function BlogClient({ posts }: BlogClientProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
-      <div className="mx-auto max-w-4xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
-              ブログ記事一覧
-            </h1>
-            <p className="mt-2 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              技術、数学、デザインに関する記事を投稿しています。
-              {posts.length > 0 && (
-                <span className="block mt-1 text-sm">
-                  全{posts.length}件中 {Math.min(loadedCount, posts.length)}件を表示
-                </span>
-              )}
-            </p>
-          </div>
+      <main>
+        <div className="mx-auto max-w-4xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+                ブログ記事一覧
+              </h1>
+              <p className="mt-2 text-lg leading-8 text-gray-600 dark:text-gray-300">
+                技術、数学、デザインに関する記事を投稿しています。
+                {posts.length > 0 && (
+                  <span className="block mt-1 text-sm">
+                    全{posts.length}件中 {Math.min(loadedCount, posts.length)}件を表示
+                  </span>
+                )}
+              </p>
+            </div>
 
-          {/* View Mode Toggle */}
-          <ViewToggle
-            currentView={viewMode}
-            availableViews={['list', 'tight']}
-            onViewChange={handleViewModeChange}
-          />
+            {/* View Mode Toggle */}
+            <ViewToggle
+              currentView={viewMode}
+              availableViews={['list', 'tight']}
+              onViewChange={handleViewModeChange}
+            />
+          </div>
         </div>
-      </div>
 
       {posts.length === 0 ? (
         <div className="mx-auto max-w-4xl mt-16">
@@ -142,6 +143,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
           )}
         </>
       )}
+      </main>
     </div>
   );
 }

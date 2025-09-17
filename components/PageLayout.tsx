@@ -19,9 +19,11 @@ export default function PageLayout({ children, maxWidth = 'medium' }: PageLayout
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
-      <div className={`mx-auto ${getMaxWidth()}`}>
-        {children}
-      </div>
+      <main>
+        <div className={`mx-auto ${getMaxWidth()}`}>
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

@@ -7,9 +7,9 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-4xl px-6 lg:px-8 py-24">
-      {/* Breadcrumb */}
-      <nav className="mb-8">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
+      {/* Breadcrumb Navigation - outside main for SEO structure */}
+      <nav aria-label="Breadcrumb" className="mx-auto max-w-4xl mb-8">
         <ol className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
           <li>
             <Link
@@ -24,7 +24,9 @@ export default function PrivacyPage() {
         </ol>
       </nav>
 
-      <div className="prose prose-gray dark:prose-invert max-w-none">
+      <main>
+        <div className="mx-auto max-w-4xl">
+          <div className="prose prose-gray dark:prose-invert max-w-none">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl mb-8">
           プライバシーポリシー
         </h1>
@@ -153,15 +155,17 @@ export default function PrivacyPage() {
           </section>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer"
-          >
-            ← ホームに戻る
-          </Link>
+            <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+              <Link
+                href="/"
+                className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer"
+              >
+                ← ホームに戻る
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
