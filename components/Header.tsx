@@ -113,7 +113,7 @@ export default function Header() {
 
           {/* Dropdown menu */}
           {themeDropdownOpen && mounted && (
-            <div className="absolute right-0 mt-2 w-24 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-50">
+            <div className="absolute right-0 mt-2 w-24 bg-blue-50 dark:bg-blue-950/90 border border-blue-200 dark:border-blue-700 rounded-md shadow-lg z-50">
               <button
                 onClick={() => handleThemeChange('light')}
                 className={`block w-full px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${

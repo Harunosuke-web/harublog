@@ -58,10 +58,10 @@ export default function ViewToggle({ currentView, availableViews, onViewChange }
           <button
             key={viewType}
             onClick={() => onViewChange(viewType)}
-            className={`p-2 rounded-md transition-colors fast-tooltip ${
+            className={`p-2 rounded-lg transition-colors fast-tooltip ${
               isActive
-                ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'text-green-500 dark:text-green-400 bg-green-50 dark:bg-green-900/20'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
             }`}
             data-tooltip={option.label}
           >
