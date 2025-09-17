@@ -19,7 +19,7 @@ export default function Button({
   className = '',
   disabled = false
 }: ButtonProps) {
-  const baseStyles = "inline-flex items-center font-medium transition-colors duration-200 rounded-lg";
+  const baseStyles = "inline-flex items-center justify-center font-medium transition-colors duration-200 rounded-lg";
 
   const variantStyles = {
     primary: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30",
